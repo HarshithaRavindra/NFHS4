@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Visual analytics of population health surveys</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/treemapstyle.css" />
+	<script src="js/d3.v2.js"></script>
+	<script src="js/jquery-1.7.1.js"></script>
+	<center><h2>National Family Health Survey by District: 2015-2016</h2></center>
+	<p id="chart">
+	<p id="rawdata">
+	<style type="text/css">
+  
+	.style("background", function(d) { while (d.depth > 1) d = d.parent; return color(d.data.key); })
+	</style>
+	<script src="js/treemap.js"></script>
+	<script>
+	  function reSortRoot(root,value_key) {
+	    //console.log("Calling");
+	    for (var key in root) {
+	      if (key == "key") {
+	        root.name = root.key;
+	        delete root.key;
+	      }
+	      if (key == "values") {
+	        root.children = [];
+	        for (item in root.values) {
+	          root.children.push(reSortRoot(root.values[item],value_key));
+	        }
+	        delete root.values;
+	      }
+	      if (key == value_key) {
+	        root.value = parseFloat(root[value_key]);
+	        delete root[value_key];
+	      }
+	    }
+	    return root;
+	  }
+
+	  $( document ).ready(function() {
+	    // You can comment out the whole csv section if you just have a JSON file.
+	    // loadJSONFile('data/portaldata.json');
+
+			d3.csv("data/nfhs4-district-level_latlng_treemap.csv", function(csv_data){
+
+			// Add, remove or change the key values to change the hierarchy. 
+			var nested_data = d3.nest()
+			      .key(function(d)  { return d.State; })
+			      .key(function(d)  { return d.Rural_Urban_Classification; })
+			      // .key(function(d)  { return d.Education; })
+			      // .key(function(d)  { return d.Age; })
+			      .entries(csv_data);
+
+			// Creat the root node for the treemap
+			var root = {};
+
+			// Add the data to the tree
+			root.key = "NFHS4 4 Aggregated Data";
+			root.values = nested_data;
+
+			// Change the key names and children values from .next and add values for a chosen column to define the size of the blocks
+			root = reSortRoot(root,"num");
+
+			// DEBUG
+			//      $("#rawdata").html(JSON.stringify(root));
+
+			loadData(root);
+	      
+	    });
+
+
+	  });
+	</script>
+  </head>
+  <body>
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight img" style="background-image: url(images/sidebar-bg.jpg);">
+			<h1 id="colorlib-logo" class="mb-4"><a href="index.html">National Family Health Survey 2015-2016</a></h1>
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="about.html">About</a></li>
+					<li><a href="contact.html">Contact</a></li>
+				</ul>
+			</nav>
+		</aside>
+		<div id="colorlib-main">
+			<section class="ftco-section ftco-no-pt ftco-no-pb">
+	    	<div class="container px-0">
+	    	</div>
+	    </section>
+		</div>
+	</div>
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script> -->
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>

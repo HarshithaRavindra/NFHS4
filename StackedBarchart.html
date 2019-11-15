@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Visual analytics of population health surveys</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3-tip.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <style>
+
+      body {
+        font: 10px sans-serif;
+      }
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      .d3-tip {
+        line-height: 1;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      /* Creates a small triangle extender for the tooltip */
+      .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+      }
+
+      /* Style northward tooltips specifically */
+      .d3-tip.n:after {
+        margin: -2px 0 0 0;
+        top: 100%;
+        left: 0;
+      }
+
+    </style>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3-tip.min.js"></script>
+  </head>
+  <body>
+
+	<div id="colorlib-page">
+		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+		<aside id="colorlib-aside" role="complementary" class="js-fullheight img" style="background-image: url(images/sidebar-bg.jpg);">
+			<h1 id="colorlib-logo" class="mb-4"><a href="index.html">National Family Health Survey 2015-2016</a></h1>
+			<nav id="colorlib-main-menu" role="navigation">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="about.html">About</a></li>
+					<li><a href="contact.html">Contact</a></li>
+				</ul>
+			</nav>
+
+		</aside> 
+		<div id="colorlib-main">
+			<section class="ftco-section ftco-no-pt ftco-no-pb">
+	    	<div class="container px-0">
+	    		<div class="row d-flex no-gutters">
+	    			<div class="col-lg-8 px-md-5 py-5">
+	    				<center><h2>National Family Health Survey by District: 2015-2016</h2></center>   
+              <center><h5>Stunting cases in children between 0 to 5 years.</h5></center> 
+	    			</div>
+	    		</div>
+	    	</div>
+	    </section>
+	</div>
+
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+  <center><script>
+
+    var margin = {top: 80, right: 20, bottom: 20, left: 700},
+        width = 1300 - margin.left - margin.right,
+        height = 700 - margin.top - margin.bottom;
+
+    var y = d3.scale.ordinal()
+        .rangeRoundBands([0, height], .3);
+
+    var x = d3.scale.linear()
+        .rangeRound([0, width]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .tickFormat(d3.format(",%"))
+        .orient("top");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .tickSize(0)
+        .orient("left");
+
+    var color = d3.scale.ordinal()
+        .range(["#ff0000","#ffa500","#1a9850"]);
+
+    var svg = d3.select('body').append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.csv("data/Children_Zscore_HAZ_State_modified.csv", function(error, data) {
+      
+      var rateNames = d3.keys(data[0]).filter(function(key) { return key !== "State"; });
+      var rowsNames = data.map(function(d) { return d.State ; });
+      var neutralIndex = 1 ;//Math.floor(rateNames.length/2);
+      
+      color.domain(rateNames);
+      
+      data.forEach(function(row) {
+        row.total = d3.sum(rateNames.map(function(name) { 
+          console.log(+row[name],name)
+          return +row[name]; }));
+        console.log(row.total)
+        rateNames.forEach(function(name) { row['relative'+name] = (row.total !==0 ? +row[name]/row.total : 0); });
+        console.log(rateNames)
+        var x0 = -1 * d3.sum(rateNames.map(function(name,i) { console.log(i, neutralIndex); return i < neutralIndex ? +row['relative'+name] : 0; }));
+        console.log(x0)
+        if (rateNames.length & 1) x0 += -1 * row['relative' + rateNames[neutralIndex] ];   
+        console.log(x0)
+        var idx = 0;
+        
+        row.boxes = rateNames.map(function(name) { 
+          console.log("row['relative'+name]",row['relative'+name], name)
+          return {name: name, x0: x0, x1: x0 += row['relative'+name], total: row.total, absolute: row[name]}; 
+        });
+        console.log(row.boxes)
+      });
+
+      var min = d3.min(data, function(d) { console.log(d); return d.boxes["0"].x0; });
+      var max = d3.max(data, function(d) { return d.boxes[d.boxes.length-1].x1; });
+
+      x.domain([min, max]).nice();
+      y.domain(rowsNames);
+
+      svg.append("g")
+         .attr("class", "x axis")
+         .call(xAxis);
+
+      svg.append("g")
+         .attr("class", "y axis")
+         .call(yAxis);
+
+
+      var tip = d3.tip()
+            .attr("class", "d3-tip")
+            // .offset([-10, 0])
+            .style("visibility", "visible").style('width', 'auto').style('padding', '5px')
+            .html(function(d) {
+              if (d.name == "HAZ_Normal")
+                per = d.x1 * 100;
+              else
+                per = (Math.abs(d.x0) - Math.abs(d.x1))*(100);
+              return per.toFixed(2) +"%" ;
+            });
+
+      svg.call(tip);
+
+      var rows = svg.selectAll(".row")
+          .data(data)
+        .enter().append("g")
+          .attr("class", "bar")
+          .attr("transform", function(d) { return "translate(0," + y(d.State) + ")"; })
+          .on("mouseover", function(d) {
+            svg.selectAll('.y').selectAll('text').filter(function(text) { return text===d.State; })
+                .style('font','20px sans-serif');
+          })
+          .on("mouseout", function(d) {
+            svg.selectAll('.y').selectAll('text').filter(function(text) { return text===d.State; })
+                .style('font','10px sans-serif');
+          });
+
+      var bars = rows.selectAll("rect")
+          .data(function(d) { return d.boxes; })
+          .enter().append("g");
+
+      bars.append("rect")
+          .attr("height", y.rangeBand())
+          .attr("x", function(d) { return x(d.x0); })
+          .attr("width", function(d) { return x(d.x1) - x(d.x0); })
+          .style("fill", function(d) { return color(d.name); })
+          .on("mouseover", tip.show)
+          .on("mouseout", tip.hide);
+
+      bars.append("text")
+        .attr("x", function(d) { return x(d.x0); })
+        .attr("y", y.rangeBand()/2)
+        .attr("dy", "0.5em")
+        .attr("dx", "0.5em")
+        .style("text-anchor", "begin")
+        .text(function(d) { return d.absolute !== 0 && (d.x1-d.x0)>0.04 ? d.absolute : "" });
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .append("line")
+          .attr("x1", x(0))
+          .attr("x2", x(0))
+          .attr("y2", height);
+
+      var legend = svg.selectAll(".legend")
+          .data(rateNames)
+          .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(" + width/rateNames.length * i + ",-55)"; });
+
+      legend.append("rect")
+            .attr("x", 0)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+      legend.append("text")
+            .attr("x", 22)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "begin")
+            .text(function(d) { return d; });
+
+    });
+
+  </script></center>
+  
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script> -->
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Visual analytics of population health surveys</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/ionicons.min.css">
+
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
+
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/d3-tip.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <style>
+
+    body { background:white;}
+    svg { width:100%; height: 100% }
+    path {fill:none;color:#fff;}
+    .graticule {
+      fill: none;
+      stroke: #bbb;
+      stroke-width: .5px;
+      stroke-opacity: .5;
+    }
+
+      circle {
+        stroke: red;
+        fill: rgba(0,0, 0, 0.2);
+      }
+
+      circle:hover { 
+        stroke: blue;
+        stroke-width: 0.5px;
+      }
+
+      .d3-tip {
+        font-family: 'Raleway', sans-serif;
+        font-size: 1.5em;
+        line-height: 1;
+        padding: 7px;
+        background: white;
+        color: black;
+        border-radius: 20px;
+      }
+    </style>
+  </head>
+  <body>
+
+  <div id="colorlib-page">
+    <a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle"><i></i></a>
+    <aside id="colorlib-aside" role="complementary" class="js-fullheight img" style="background-image: url(images/sidebar-bg.jpg);">
+      <h1 id="colorlib-logo" class="mb-4"><a href="index.html">National Family Health Survey 2015-2016</a></h1>
+      <nav id="colorlib-main-menu" role="navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+    </aside> 
+    <div id="colorlib-main">
+      <section class="ftco-section ftco-no-pt ftco-no-pb">
+        <div class="container px-0">
+          <div class="row d-flex no-gutters">
+            <div class="col-lg-8 px-md-5 py-5">
+              <center><h2>National Family Health Survey by District: 2015-2016</h2></center>  
+              <center><h6>State:District:Child Interviewed Count</h6></center>
+            </div>
+          </div>
+        </div>
+      </section>
+  </div>
+
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+  <script>
+
+      var outerWidth = 960;
+      var outerHeight = 650;
+      var margin = { left: 100, top: 30, right: 100, bottom: 0 };
+
+      var xColumn = "Longitude";
+      var yColumn = "Latitude";
+      var rColumn = "Child_Interviewed_count";
+      var peoplePerPixel = 20;
+
+      var innerWidth  = outerWidth  - margin.left - margin.right;
+      var innerHeight = outerHeight - margin.top  - margin.bottom;
+
+      var svg = d3.select("body").append("svg")
+        .attr("width",  outerWidth)
+        .attr("height", outerHeight);
+
+      var zoom = d3.behavior.zoom()
+        .scaleExtent([1, 18])
+        .on("zoom", zoomed);
+
+      var g = svg.append("g")
+        .attr("transform", "translate(" + 650 + "," + margin.top + ")")
+        .call(zoom);
+
+      var rect = g.append("rect")
+        .attr("width", outerWidth)
+        .attr("height", outerHeight)
+        .style("fill", "none")
+        .style("pointer-events", "all");
+
+      var container = g.append("g");
+
+      function zoomed(){
+        container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      }
+
+      var populationFormat = d3.format(",");
+
+      var tip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([-10, 0])
+        .html(function(d) {
+          return d.State + ": " + d.District + ": " + populationFormat(d.Child_Interviewed_count);
+        });
+
+      g.call(tip);
+
+      var xScale = d3.scale.linear().range([0, innerWidth]);
+      var yScale = d3.scale.linear().range([innerHeight, 0]);
+      var rScale = d3.scale.sqrt();
+
+      function render(data){
+
+        xScale.domain( d3.extent(data, function (d){ return d[xColumn]; }));
+        yScale.domain( d3.extent(data, function (d){ return d[yColumn]; }));
+        rScale.domain([0, d3.max(data, function (d){ return d[rColumn]; })]);
+
+        // Compute the size of the biggest circle as a function of peoplePerPixel.
+        var peopleMax = rScale.domain()[1];
+        var rMin = 0;
+        var rMax = Math.sqrt(peopleMax / (peoplePerPixel * Math.PI));
+        rScale.range([rMin, rMax]);
+
+        var circles = container.selectAll("circle").data(data);
+        circles.enter().append("circle");
+        circles
+          .attr("cx", function (d){ return xScale(d[xColumn]); })
+          .attr("cy", function (d){ return yScale(d[yColumn]); })
+          .attr("r",  function (d){ return rScale(d[rColumn]); })
+          .on("mouseover", tip.show)
+          .on("mouseout", tip.hide);
+        circles.exit().remove();
+      }
+
+      function type(d){
+        d.Latitude = +d.Latitude;
+        d.Longitude = +d.Longitude;
+        d.Child_Interviewed_count = +d.Child_Interviewed_count;
+        return d;
+      }
+
+      d3.csv("data/child_interviewed_count.csv", type, render);
+
+  </script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/scrollax.min.js"></script>
+<!--   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script> -->
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>
