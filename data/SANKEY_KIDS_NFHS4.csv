@@ -1,0 +1,54 @@
+source,target,value
+Female,0-6 Months,13016
+Female,1-2 years,23477
+Female,2-3 Years,23560
+Female,3-4 Years,24542
+Female,4-5 Years,21107
+Female,6-12 Months,11783
+Female,Age Not known,7040
+Male,0-6 Months,13951
+Male,1-2 years,25313
+Male,2-3 Years,25281
+Male,3-4 Years,26027
+Male,4-5 Years,23235
+Male,6-12 Months,13216
+Male,Age Not known,8079
+0-6 Months,Anemia Level NK,22650
+0-6 Months,Anemia Level NK,1829
+0-6 Months,Mild,746
+0-6 Months,Moderate,907
+0-6 Months,Not anemic,798
+0-6 Months,Severe,37
+1-2 years,Anemia Level NK,2187
+1-2 years,Mild,12598
+1-2 years,Moderate,18461
+1-2 years,Not anemic,14294
+1-2 years,Severe,1250
+2-3 Years,Anemia Level NK,2181
+2-3 Years,Mild,12920
+2-3 Years,Moderate,14075
+2-3 Years,Not anemic,18821
+2-3 Years,Severe,844
+3-4 Years,Anemia Level NK,2397
+3-4 Years,Mild,13190
+3-4 Years,Moderate,10610
+3-4 Years,Not anemic,23869
+3-4 Years,Severe,503
+4-5 Years,Anemia Level NK,2212
+4-5 Years,Mild,10996
+4-5 Years,Moderate,7196
+4-5 Years,Not anemic,23660
+4-5 Years,Severe,278
+6-12 Months,Anemia Level NK,1557
+6-12 Months,Mild,6554
+6-12 Months,Moderate,8868
+6-12 Months,Not anemic,7546
+6-12 Months,Severe,474
+Age Not known,Anemia Level NK,15119
+Anemia Level NK,No,11884
+Anemia Level NK,Yes,25885
+Anemia Level NK,Yes,12363
+Mild,Yes,57004
+Moderate,Yes,60117
+Not anemic,Yes,88988
+Severe,Yes,3386
