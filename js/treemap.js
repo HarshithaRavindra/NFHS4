@@ -7,8 +7,8 @@ if(parent.document.getElementsByTagName("iframe")[0]) {
 }
 
 var margin = {top: 20, right: 0, bottom: 0, left: 900},
-    width = 1020,
-    height = 560 - margin.top - margin.bottom,
+    width = 820,
+    height = 460 - margin.top - margin.bottom,
     formatNumber = d3.format(".2s"),
     transitioning;
 
@@ -31,8 +31,8 @@ var treemap = d3.layout.treemap()
 var svg = d3.select("#chart").append("svg")
 	.attr("width", width + margin.left + margin.right)
 	.attr("height", height + margin.bottom + margin.top)
-	.style("margin-left", -margin.left + "px")
-	.style("margin.right", -margin.right + "px")
+	// .style("margin-left", -margin.left + "px")
+	// .style("margin.right", -margin.right + "px")
 	.append("g")
 	.attr("transform", "translate(1000," + margin.top + ")")
 	.style("shape-rendering", "crispEdges");
