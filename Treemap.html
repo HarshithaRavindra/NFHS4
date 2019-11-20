@@ -70,9 +70,8 @@
 			// Add, remove or change the key values to change the hierarchy. 
 			var nested_data = d3.nest()
 			      .key(function(d)  { return d.State; })
+			      .key(function(d)  { return d.District; })
 			      .key(function(d)  { return d.Rural_Urban_Classification; })
-			      // .key(function(d)  { return d.Education; })
-			      // .key(function(d)  { return d.Age; })
 			      .entries(csv_data);
 
 			// Creat the root node for the treemap
