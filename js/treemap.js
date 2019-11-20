@@ -6,7 +6,7 @@ if(parent.document.getElementsByTagName("iframe")[0]) {
 	parent.document.getElementsByTagName("iframe")[0].setAttribute('style', 'height: 700px !important');
 }
 
-var margin = {top: 20, right: 0, bottom: 0, left: 650},
+var margin = {top: 20, right: 0, bottom: 0, left: 20},
     width = 820,
     height = 460 - margin.top - margin.bottom,
     formatNumber = d3.format(".2s"),
