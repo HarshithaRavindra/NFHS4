@@ -7,7 +7,7 @@ if(parent.document.getElementsByTagName("iframe")[0]) {
 }
 
 var margin = {top: 20, right: 0, bottom: 0, left: 20},
-    width = 920,
+    width = 820,
     height = 560 - margin.top - margin.bottom,
     formatNumber = d3.format(".2s"),
     transitioning;
@@ -34,7 +34,7 @@ var svg = d3.select("#chart").append("svg")
 	// .style("margin-left", -margin.left + "px")
 	// .style("margin.right", -margin.right + "px")
 	.append("g")
-	.attr("transform", "translate(250," + margin.top + ")")
+	.attr("transform", "translate(20," + margin.top + ")")
 	.style("shape-rendering", "crispEdges");
 
 var color = d3.scale.category20c();
