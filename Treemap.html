@@ -69,7 +69,7 @@
 
 			// Add, remove or change the key values to change the hierarchy. 
 			var nested_data = d3.nest()
-			      .key(function(d)  { return d.V024; })
+			      // .key(function(d)  { return d.V024; })
 			      .key(function(d)  { return d.V106; })
 			      .key(function(d)  { return d.HW57; }) 
 			      .entries(csv_data);
