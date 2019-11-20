@@ -34,7 +34,7 @@ var svg = d3.select("#chart").append("svg")
 	.style("margin-left", -margin.left + "px")
 	.style("margin.right", -margin.right + "px")
 	.append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+	.attr("transform", "translate(1000," + margin.top + ")")
 	.style("shape-rendering", "crispEdges");
 
 var color = d3.scale.category20c();
