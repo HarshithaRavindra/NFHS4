@@ -65,13 +65,13 @@
 	    // You can comment out the whole csv section if you just have a JSON file.
 	    // loadJSONFile('data/portaldata.json');
 
-			d3.csv("data/nfhs4-district-level_latlng_treemap.csv", function(csv_data){
+			d3.csv("data/child_undernutition_wrt_mother.csv", function(csv_data){
 
 			// Add, remove or change the key values to change the hierarchy. 
 			var nested_data = d3.nest()
-			      .key(function(d)  { return d.State; })
-			      .key(function(d)  { return d.District; })
-			      .key(function(d)  { return d.Rural_Urban_Classification; }) 
+			      .key(function(d)  { return d.V024; })
+			      .key(function(d)  { return d.V106; })
+			      .key(function(d)  { return d.HW57; }) 
 			      .entries(csv_data);
 
 			// Creat the root node for the treemap
