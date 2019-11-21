@@ -77,7 +77,7 @@
 			<section class="ftco-section ftco-no-pt ftco-no-pb">
 	    	<div class="container px-0">
 	    		<center><h2>National Family Health Survey by State: 2015-2016</h2></center>
-          <center><h5>Pyramid chart for Male and Femal children Surveyed</h5></center>
+          <!-- <center><h5>Pyramid chart for Male and Female children Surveyed</h5></center> -->
     			<!-- <div id="map" style="width: 1000px; height: 800px"></div> -->
 	    	</div>
 	    </section>
@@ -145,8 +145,8 @@
       var labels = svg.append("g")
         .attr("class", "labels")
 
-      labels.append("text").attr("transform", "translate(640+50," + 15 + ")")
-        .text("Male | Female")
+      labels.append("text").attr("transform", "translate(1030,55)")
+        .text("Wasting | Sanitation")
         .attr("text-anchor", "middle")
 
       //
@@ -195,7 +195,7 @@
           .attr("dy", +12)
           // .orient("bottom");
     }
-    d3.csv("data/Child_State_sex_count.csv", ready);
+    d3.csv("data/Sanitation_Wasting.csv", ready);
 
     </script>
   <script src="js/jquery.min.js"></script>
